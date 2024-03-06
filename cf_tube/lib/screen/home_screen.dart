@@ -39,7 +39,8 @@ class _HomeScreenState extends State<HomeScreen>{
               onRefresh: () async {
                 setState(() {});
               },
-              child : ListView(physics:  BouncingScrollPhysics(),
+              child : ListView(
+                physics:  BouncingScrollPhysics(),
                 children : snapshot.data!.map((e)=> CustomYoutubePlayer(videoModel: e)).toList(),
           ),
           );
