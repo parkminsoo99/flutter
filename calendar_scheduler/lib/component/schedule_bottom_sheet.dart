@@ -3,63 +3,118 @@ import 'package:calendar_scheduler/component/custom_text_field.dart';
 import 'package:calendar_scheduler/const/colors.dart';
 class SchedulBottomSheet extends StatefulWidget{
   SchedulBottomSheet({Key? key}) : super(key:key);
-
   @override
   State<SchedulBottomSheet> createState() => _ScheduleBottomSheetState();
 }
 
 class _ScheduleBottomSheetState extends State<SchedulBottomSheet>{
+  final textStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w600,
+  );
+  final GlobalKey<FormState> formKey = GlobalKey();
+
+  int? startTime;
+  int? endTime;
+  String? content;
   @override
   Widget build(BuildContext context){
-    return SafeArea(
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+
+    return Form(
+      key: formKey,
+      child:SafeArea(
         child: Container(
-          height: MediaQuery.of(context).size.height / 2,
-          color:Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8,right:8,top:8),
-            child: Column(
-              children: [
-                Row(
+            height: MediaQuery.of(context).size.height / 2 + bottomInset,
+            color:Colors.white,
+            child: Padding(
+                padding: EdgeInsets.only(left: 8,right:8,top:8, bottom: bottomInset),
+                child: Column(
                   children: [
-                    Expanded(
-                        child: CustomTextField(
-                          label:'시작 시간',
-                          isTime: true,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextField(
+                            label:'시작 시간',
+                            isTime: true,
+                            onSaved: (String? val){
+                              startTime = int.parse(val!);
+                            },
+                            validator : timeValidator,
+                          ),
                         ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: CustomTextField(
+                            label:'종료 시간',
+                            isTime: true,
+                            onSaved: (String? val){
+                              endTime = int.parse(val!);
+                            },
+                            validator: timeValidator,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(height: 8),
                     Expanded(
                       child: CustomTextField(
-                        label:'종료 시간',
-                        isTime: true,
+                        label:'내용',
+                        isTime: false,
+                        onSaved: (String? val){
+                          content = val;
+                        },
+                        validator: contentValidator,
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: CustomTextField(
-                    label:'내용',
-                    isTime: false,
-                  ),
-                ),
-                SizedBox(
-                    width: double.infinity,
-                    child : ElevatedButton(
+                    SizedBox(
+                      width: double.infinity,
+                      child : ElevatedButton(
                         onPressed: onSavePressed,
                         style : ElevatedButton.styleFrom(
                           backgroundColor: PRIMARY_COLOR,
                         ),
-                        child: Text('저장'),
+                        child: Text(
+                          '저장',
+                          style: textStyle,),
+                      ),
                     ),
+                  ],
                 ),
-              ],
-            )
-          )
+            ),
         ),
+      ),
     );
   }
   void onSavePressed(){
+    if(formKey.currentState!.validate()){
+      formKey.currentState!.save();
+      print(startTime);
+      print(endTime);
+      print(content);
+    }
 
+  }
+  String? timeValidator(String? val){
+    if(val == null){
+      return 'No value';
+    }
+    int? number;
+    try{
+      number = int.parse(val);
+    }catch(e){
+      return 'No number';
+    }
+    if(number <0 || number > 24){
+      return 'Please Input number between 0 and 24';
+    }
+    return null;
+  }
+  String? contentValidator(String? val){
+    if(val == null || val.length ==0){
+      return 'Please Input value';
+    }
+    return null;
   }
 }
