@@ -4,19 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:calendar_scheduler/component/main_calendar.dart';
 import 'package:calendar_scheduler/component/schedule_card.dart';
 import 'package:calendar_scheduler/component/today_banner.dart';
-class HomeScreen extends StatefulWidget{
-  HomeScreen({Key? key}) : super(key:key);
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+import 'package:get_it/get_it.dart';
+import 'package:calendar_scheduler/database/drift_database.dart';
+import 'package:calendar_scheduler/component/today_banner.dart';
+import 'package:provider/provider.dart';
+import 'package:calendar_scheduler/provider/schedule_provider.dart';
 
-class _HomeScreenState extends State<HomeScreen>{
+class HomeScreen extends StatelessWidget{
   DateTime selectedDate = DateTime.utc(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
   );
   Widget build(BuildContext context){
+    final provider = context.watch<ScheduleProvider>();
+    final selectedDate =provider.selectedDate;
+    final schedules = provider.cache[selectedDate] ?? [];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: PRIMARY_COLOR,
@@ -24,7 +27,9 @@ class _HomeScreenState extends State<HomeScreen>{
           showModalBottomSheet(
             context: context,
             isDismissible: true,
-            builder: (_) => SchedulBottomSheet(),
+            builder: (_) => SchedulBottomSheet(
+              selectedDate: selectedDate,
+            ),
             isScrollControlled: true,
           );
         },
@@ -36,28 +41,46 @@ class _HomeScreenState extends State<HomeScreen>{
       body: SafeArea(
         child:Column(
           children: [
+            SizedBox(height: 8),
             MainCalendar(
               selectedDate: selectedDate,
-              onDaySelected: onDaySelected,
+              onDaySelected: (selectedDate, foucsedDate) => onDaySelected(selectedDate, foucsedDate, context),
             ),
             SizedBox(height: 8),
             TodayBanner(
                 selectedDate: selectedDate,
-                count: 0
+                count: schedules.length
             ),
-            SchedulCard(
-                startTime: 12,
-                endTime: 14,
-                content: '프로그래밍 공부',
+            Expanded(
+                child: ListView.builder(
+                  itemCount: schedules.length,
+                  itemBuilder: (context, index) {
+                    final schedule = schedules[index];
+                    return Dismissible(
+                        key: ObjectKey(schedule.id),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (DismissDirection direction){
+                          provider.deleteSchedule(date: selectedDate, id: schedule.id);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom:8, left: 8, right: 8),
+                          child : ScheduleCard(
+                            startTime : schedule.startTime,
+                            endTime : schedule.endTime,
+                            content : schedule.content,
+                          ),
+                        ),
+                    );
+                  },
+                )
             ),
           ],
         ),
       ),
     );
   }
-  void onDaySelected(DateTime selectedDate, DateTime focusedDate){
-    setState(() {
-      this.selectedDate = selectedDate;
-    });
+  void onDaySelected(DateTime selectedDate, DateTime focusedDate, BuildContext context){
+    final provider = context.read<ScheduleProvider>();
+    provider.changeSelectedDate(date: selectedDate);
   }
 }

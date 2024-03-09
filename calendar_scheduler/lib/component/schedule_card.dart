@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:calendar_scheduler/const/colors.dart';
 
 
-class SchedulCard extends StatelessWidget{
+class ScheduleCard extends StatelessWidget{
   final int startTime;
   final int endTime;
   final String content;
 
-  SchedulCard({
+  ScheduleCard({
     required this.startTime,
     required this.endTime,
     required this.content,
