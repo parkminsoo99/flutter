@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>215801002709-rl4jjla5e5ufj3fv9hl7bu2995f84bh8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.215801002709-rl4jjla5e5ufj3fv9hl7bu2995f84bh8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>215801002709-5ccsjlvgef40t1mulutqfbjqfdoju4n6.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCfHyZvRKasBvnI-Oz63bnCWm-ujJrBkyc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>215801002709</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.calendarScheduler</string>
+	<key>PROJECT_ID</key>
+	<string>calender-scheduler-451aa</string>
+	<key>STORAGE_BUCKET</key>
+	<string>calender-scheduler-451aa.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:215801002709:ios:9719c2541981033059c05c</string>
+</dict>
+</plist>
